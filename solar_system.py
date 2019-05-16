@@ -1,21 +1,33 @@
 class System:
 
-  bodies = []
+  galactic_bodies = []
+
+  def __init__(self, name):
+    self.name = name
+    self.bodies = []
 
   def add(self, body):
-    if body not in System.bodies:
-      System.bodies.append(body)
+    if body not in self.bodies:
+      self.bodies.append(body)
+      System.galactic_bodies.append(body)
     else:
       print("Already added!")
 
   def total_mass(self):
     total = 0
-    for body in System.bodies:
+    for body in self.bodies:
       total += body.mass
     return total
 
+  @classmethod
+  def galactic_mass(cls):
+    galactic_total = 0
+    for body in cls.galactic_bodies:
+      galactic_total += body.mass
+    return galactic_total
+
   def print_bodies(self):
-    for body in System.bodies:
+    for body in self.bodies:
       print(f"{body}")
 
 class Body:
@@ -23,6 +35,16 @@ class Body:
   def __init__(self, name, mass):
     self.name = name
     self.mass = mass
+
+
+# TODO: make communicate with subclasses to get class type for single method instead of all() in all subclasses.
+  # @classmethod
+  # def all(cls, system):
+  #   results = []
+  #   for body in System.bodies:
+  #     if isinstance(body, Star):
+  #       results.append(body)
+  #   print(results)
 
 
 class Planet(Body):
@@ -38,8 +60,8 @@ class Planet(Body):
   @classmethod
   def all(cls, system):
     planets = []
-    for planet in System.bodies:
-      if hasattr(planet, "day") is True:
+    for planet in system.bodies:
+      if isinstance(planet, Planet):
         planets.append(planet)
     print(planets)
 
@@ -55,8 +77,8 @@ class Star(Body):
   @classmethod
   def all(cls, system):
     stars = []
-    for star in System.bodies:
-      if hasattr(star, "type") is True:
+    for body in system.bodies:
+      if isinstance(star, Star):
         stars.append(star)
     print(stars)
 
@@ -70,15 +92,15 @@ class Moon(Body):
   @classmethod
   def all(cls, system):
     moons = []
-    for moon in System.bodies:
-      if hasattr(moon, "month") is True:
+    for moon in system.bodies:
+      if isinstance(moon, Moon):
         moons.append(moon)
     print(moons)
   
   def __repr__(self):
       return f"{self.name}, {self.mass}, {self.month}, {self.planet}"
 
-solar = System()
+solar = System("Solar")
 
 sol = Star("Sol", 19890000, "G-type")
 
@@ -95,7 +117,6 @@ europa = Moon("Europa", 234300, 4, jupiter.name)
 ganymede = Moon("Ganymede", 546900, 7, jupiter.name)
 io = Moon("Io", 765400, 2, jupiter.name)
 
-
 solar.add(sol)
 solar.add(earth)
 solar.add(luna)
@@ -108,10 +129,26 @@ solar.add(ganymede)
 solar.add(io)
 solar.add(mars)
 
-print(solar.total_mass())
-
-# solar.print_bodies()
+# print(solar.total_mass())
 
 # Planet.all(solar)
 # Star.all(solar)
 # Moon.all(solar)
+
+centauri = System("Alpha Centauri")
+
+kentaurus = Star("Rigil Kentaurus", 18390000, "G2-Type")
+toliman = Star("Toliman", 18250000, "K1-Type")
+proxima = Star("Proxima Centauri", 17490000, "M6-Type")
+
+proxima_b = Planet("Proxima Centauri b", 5438000, 22, 342)
+
+centauri.add(kentaurus)
+centauri.add(toliman)
+centauri.add(proxima)
+centauri.add(proxima_b)
+
+solar.print_bodies()
+centauri.print_bodies()
+
+print(System.galactic_mass())
