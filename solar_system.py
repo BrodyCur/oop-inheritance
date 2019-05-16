@@ -11,7 +11,7 @@ class System:
   def total_mass(self):
     total = 0
     for body in System.bodies:
-      total += body
+      total += body.mass
     return total
 
   def print_bodies(self):
@@ -108,10 +108,10 @@ solar.add(ganymede)
 solar.add(io)
 solar.add(mars)
 
-# solar.total_mass()
+print(solar.total_mass())
 
 # solar.print_bodies()
 
-Planet.all(solar)
-Star.all(solar)
-Moon.all(solar)
+# Planet.all(solar)
+# Star.all(solar)
+# Moon.all(solar)
